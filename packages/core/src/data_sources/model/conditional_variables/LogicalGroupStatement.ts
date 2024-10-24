@@ -1,6 +1,6 @@
 import { LogicalOperator } from './operators/LogicalOperator';
 import { Expression, LogicGroup } from './DataCondition';
-import { evaluateCondition } from './evaluateCondition';
+import { Condition } from './Condition';
 
 export class LogicalGroupStatement {
   constructor(
@@ -9,7 +9,10 @@ export class LogicalGroupStatement {
   ) {}
 
   evaluate(): boolean {
-    const results = this.statements.map((statement) => evaluateCondition(statement));
+    const results = this.statements.map((statement) => {
+      const condition = new Condition(statement);
+      return condition.evaluate();
+    });
     return this.operator.evaluate(results);
   }
 }
