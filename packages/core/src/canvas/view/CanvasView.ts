@@ -38,6 +38,7 @@ export interface MarginPaddingOffsets {
 export type ElementPosOpts = {
   avoidFrameOffset?: boolean;
   avoidFrameZoom?: boolean;
+  avoidAbsolute?: boolean;
   noScroll?: boolean;
 };
 
@@ -345,7 +346,7 @@ export default class CanvasView extends ModuleView<Canvas> {
    */
   offset(el?: HTMLElement, opts: ElementPosOpts = {}) {
     const { noScroll } = opts;
-    const rect = getElRect(el);
+    const rect = getElRect(el, opts);
     const scroll = noScroll ? { x: 0, y: 0 } : getDocumentScroll(el);
 
     return {
@@ -489,6 +490,10 @@ export default class CanvasView extends ModuleView<Canvas> {
     const frameTop = opts.avoidFrameOffset ? 0 : frameOffset.top;
     const frameLeft = opts.avoidFrameOffset ? 0 : frameOffset.left;
 
+    // console.log('frameTop', frameTop);
+    // console.log('frameLeft', frameLeft);
+    console.log('el', el.id, el.dataset['gjsType'], el.getBoundingClientRect());
+
     const elTop = opts.avoidFrameZoom ? elRect.top : elRect.top * zoom;
     const elLeft = opts.avoidFrameZoom ? elRect.left : elRect.left * zoom;
 
@@ -496,6 +501,8 @@ export default class CanvasView extends ModuleView<Canvas> {
     const left = opts.avoidFrameOffset ? elLeft : elLeft + frameLeft - canvasOffset.left + canvasEl.scrollLeft;
     const height = opts.avoidFrameZoom ? elRect.height : elRect.height * zoom;
     const width = opts.avoidFrameZoom ? elRect.width : elRect.width * zoom;
+
+    console.log('getElementPos', { top, left, height, width, zoom, rect: elRect });
 
     return { top, left, height, width, zoom, rect: elRect };
   }
