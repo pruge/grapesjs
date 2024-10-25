@@ -1,5 +1,6 @@
 import { each, isArray, isString, isUndefined } from 'underscore';
 import { ObjectAny } from '../common';
+import { ElementPosOpts } from '../canvas/view/CanvasView';
 
 type vNode = {
   tag?: string;
@@ -157,7 +158,7 @@ export const isTaggableNode = (el?: Node) => el && !isTextNode(el) && !isComment
  * @param el
  * @returns {DOMRect}
  */
-export const getElRect = (el?: Element) => {
+export const getElRect = (el?: Element, opts: ElementPosOpts = {}) => {
   const def = {
     top: 0,
     left: 0,
@@ -172,6 +173,22 @@ export const getElRect = (el?: Element) => {
     range.selectNode(el);
     rectText = range.getBoundingClientRect();
     range.detach();
+  }
+
+  const { top, left, width, height } = el.getBoundingClientRect ? el.getBoundingClientRect() : def;
+  const rect = {
+    top,
+    left,
+    width,
+    height,
+  };
+
+  const parentEl = el.parentElement;
+  const style = parentEl ? getComputedStyle(parentEl) : { position: '' };
+  if (style.position === 'absolute' && opts.avoidAbsolute) {
+    rect.top = rect.top - (parentEl?.offsetTop || 0) - 2;
+    rect.left = rect.left - (parentEl?.offsetLeft || 0) - 2;
+    return rect;
   }
 
   return rectText || (el.getBoundingClientRect ? el.getBoundingClientRect() : def);
