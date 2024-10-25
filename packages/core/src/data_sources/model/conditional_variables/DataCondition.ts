@@ -25,6 +25,7 @@ export class DataCondition extends Model {
   private conditionResult: boolean;
   private condition: Condition;
   private em: EditorModel;
+  private variableListeners: DynamicVariableListenerManager[] = [];
 
   defaults() {
     return {
@@ -69,19 +70,28 @@ export class DataCondition extends Model {
   private listenToDataVariables() {
     if (!this.em) return;
 
+    // Clear previous listeners to avoid memory leaks
+    this.cleanupListeners();
+
     const dataVariables = this.condition.getDataVariables();
     if (isDataVariable(this.ifTrue)) dataVariables.push(this.ifTrue);
     if (isDataVariable(this.ifFalse)) dataVariables.push(this.ifFalse);
 
-    // TODO avoid memory leaks
     dataVariables.forEach((variable) => {
       const variableInstance = new DataVariable(variable, { em: this.em });
-      new DynamicVariableListenerManager({
-        model: this,
+      const listener = new DynamicVariableListenerManager({
+        model: this as any,
         em: this.em!,
         dataVariable: variableInstance,
         updateValueFromDataVariable: this.reevaluate.bind(this),
       });
+
+      this.variableListeners.push(listener);
     });
+  }
+
+  private cleanupListeners() {
+    this.variableListeners.forEach((listener) => listener.destroy());
+    this.variableListeners = [];
   }
 }

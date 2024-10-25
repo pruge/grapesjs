@@ -71,4 +71,8 @@ export default class DynamicVariableListenerManager {
     this.dataListeners.forEach((ls) => model.stopListening(ls.obj, ls.event, this.onChange));
     this.dataListeners = [];
   }
+
+  destroy() {
+    this.removeListeners();
+  }
 }
