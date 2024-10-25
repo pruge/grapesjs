@@ -72,8 +72,10 @@ export class DataCondition extends Model {
     const dataVariables = this.condition.getDataVariables();
     if (isDataVariable(this.ifTrue)) dataVariables.push(this.ifTrue);
     if (isDataVariable(this.ifFalse)) dataVariables.push(this.ifFalse);
+
+    // TODO avoid memory leaks
     dataVariables.forEach((variable) => {
-      const variableInstance = new DataVariable(variable, {});
+      const variableInstance = new DataVariable(variable, { em: this.em });
       new DynamicVariableListenerManager({
         model: this,
         em: this.em!,

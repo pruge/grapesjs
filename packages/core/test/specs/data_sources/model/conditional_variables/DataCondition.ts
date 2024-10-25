@@ -8,10 +8,10 @@ import { GenericOperation } from '../../../../../src/data_sources/model/conditio
 import { LogicalOperation } from '../../../../../src/data_sources/model/conditional_variables/operators/LogicalOperator';
 import { NumberOperation } from '../../../../../src/data_sources/model/conditional_variables/operators/NumberOperator';
 import { StringOperation } from '../../../../../src/data_sources/model/conditional_variables/operators/StringOperations';
-import { DataVariableType } from "../../../../../src/data_sources/model/DataVariable";
-import { DataSourceProps } from "../../../../../src/data_sources/types";
+import { DataVariableType } from '../../../../../src/data_sources/model/DataVariable';
+import { DataSourceProps } from '../../../../../src/data_sources/types';
+import Editor from '../../../../../src/editor/model/Editor';
 import EditorModel from '../../../../../src/editor/model/Editor';
-import { setupTestEditor } from '../../../../common';
 
 describe('DataCondition', () => {
   let em: EditorModel;
@@ -19,18 +19,18 @@ describe('DataCondition', () => {
   const dataSource: DataSourceProps = {
     id: 'USER_STATUS_SOURCE',
     records: [
-      { id: 'USER_1', age: 25, status: 'active', },
+      { id: 'USER_1', age: 25, status: 'active' },
       { id: 'USER_2', age: 12, status: 'inactive' },
     ],
   };
 
   beforeEach(() => {
-    ({ em, dsm } = setupTestEditor());
+    em = new Editor();
+    dsm = em.DataSources;
     dsm.add(dataSource);
   });
 
   afterEach(() => {
-    dsm.clear();
     em.destroy();
   });
 
@@ -301,12 +301,22 @@ describe('DataCondition', () => {
     });
 
     test('should handle data variables as an ifTrue return value', () => {
-      const dataCondition = new DataCondition(true, { type: DataVariableType, path: 'USER_STATUS_SOURCE.USER_1.status' }, 'No', { em });
+      const dataCondition = new DataCondition(
+        true,
+        { type: DataVariableType, path: 'USER_STATUS_SOURCE.USER_1.status' },
+        'No',
+        { em },
+      );
       expect(dataCondition.getDataValue()).toBe('active');
     });
 
     test('should handle data variables as an ifFalse return value', () => {
-      const dataCondition = new DataCondition(false, 'Yes', { type: DataVariableType, path: 'USER_STATUS_SOURCE.USER_1.status' }, { em });
+      const dataCondition = new DataCondition(
+        false,
+        'Yes',
+        { type: DataVariableType, path: 'USER_STATUS_SOURCE.USER_1.status' },
+        { em },
+      );
       expect(dataCondition.getDataValue()).toBe('active');
     });
   });
