@@ -24,7 +24,7 @@ export type LogicGroup = {
 export class DataCondition extends Model {
   private conditionResult: boolean;
   private condition: Condition;
-  em: EditorModel | undefined;
+  private em: EditorModel;
 
   defaults() {
     return {
@@ -37,12 +37,12 @@ export class DataCondition extends Model {
     condition: Expression | LogicGroup | boolean,
     private ifTrue: any,
     private ifFalse: any,
-    opts: { em?: EditorModel } = {},
+    opts: { em: EditorModel },
   ) {
     super();
-    this.conditionResult = this.evaluate();
-    this.condition = new Condition(condition);
+    this.condition = new Condition(condition, { em: opts.em });
     this.em = opts.em;
+    this.conditionResult = this.evaluate();
     this.listenToDataVariables();
   }
 
@@ -51,7 +51,7 @@ export class DataCondition extends Model {
   }
 
   getDataValue(): any {
-    return this.conditionResult ? evaluateVariable(this.ifTrue) : evaluateVariable(this.ifFalse);
+    return this.conditionResult ? evaluateVariable(this.ifTrue, this.em) : evaluateVariable(this.ifFalse, this.em);
   }
 
   reevaluate(): void {

@@ -1,3 +1,4 @@
+import EditorModel from '../../../editor/model/Editor';
 import DataVariable from '../DataVariable';
 import { evaluateVariable, isDataVariable } from '../utils';
 import { Expression, LogicGroup } from './DataCondition';
@@ -10,9 +11,11 @@ import { StringOperator, StringOperation } from './operators/StringOperations';
 
 export class Condition {
   private condition: Expression | LogicGroup | boolean;
+  private em: EditorModel;
 
-  constructor(condition: Expression | LogicGroup | boolean) {
+  constructor(condition: Expression | LogicGroup | boolean, opts: { em: EditorModel }) {
     this.condition = condition;
+    this.em = opts.em;
   }
 
   evaluate(): boolean {
@@ -28,18 +31,18 @@ export class Condition {
     if (this.isLogicGroup(condition)) {
       const { logicalOperator, statements } = condition;
       const operator = new LogicalOperator(logicalOperator);
-      const logicalGroup = new LogicalGroupStatement(operator, statements);
+      const logicalGroup = new LogicalGroupStatement(operator, statements, { em: this.em });
       return logicalGroup.evaluate();
     }
 
     if (this.isExpression(condition)) {
       const { left, operator, right } = condition;
-      const op = this.getOperator(left, operator);
+      const evaluateLeft = evaluateVariable(left, this.em);
+      const evaluateRight = evaluateVariable(right, this.em);
+      const op = this.getOperator(evaluateLeft, operator);
 
-      const evaluateLeft = evaluateVariable(left);
-      const evaluateRight = evaluateVariable(right);
-
-      return op.evaluate(evaluateLeft, evaluateRight);
+      const evaluated = op.evaluate(evaluateLeft, evaluateRight);
+      return evaluated;
     }
 
     throw new Error('Invalid condition type.');
