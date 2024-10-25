@@ -5,7 +5,7 @@ import { stringToPath } from '../../utils/mixins';
 export const DataVariableType = 'data-variable';
 
 export default class DataVariable extends Model {
-  em?: EditorModel;
+  em: EditorModel;
 
   defaults() {
     return {
@@ -37,7 +37,10 @@ export default class DataVariable extends Model {
 
   getDataValue() {
     const { path, defaultValue } = this.attributes;
-    const val = this.em?.DataSources.getValue(path, defaultValue);
+    if (!this.em) {
+      throw new Error('EditorModel instance is not provided for a data variable.');
+    }
+    const val = this.em.DataSources.getValue(path, defaultValue);
 
     return val;
   }
