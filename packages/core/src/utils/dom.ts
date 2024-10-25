@@ -184,10 +184,11 @@ export const getElRect = (el?: Element, opts: ElementPosOpts = {}) => {
   };
 
   const parentEl = el.parentElement;
+  const parentRect = parentEl?.getBoundingClientRect();
   const style = parentEl ? getComputedStyle(parentEl) : { position: '' };
   if (style.position === 'absolute' && opts.avoidAbsolute) {
-    rect.top = rect.top - (parentEl?.offsetTop || 0) - 2;
-    rect.left = rect.left - (parentEl?.offsetLeft || 0) - 2;
+    rect.top = rect.top - (parentRect?.top || 0) - 2;
+    rect.left = rect.left - (parentRect?.left || 0) - 2;
     return rect;
   }
 

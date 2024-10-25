@@ -108,11 +108,16 @@ export default class BlockManager extends ItemManagerModule<BlockManagerConfig, 
     const { em, events, blocks } = this;
     const content = block.getContent ? block.getContent() : block;
     this._dragBlock = block;
+    const { offsetX, offsetY } = (ev as MouseEvent) || {};
     em.set({
       dragResult: null,
       dragSource: {
         content,
         dragDef: block.getDragDef(),
+      },
+      dragOffset: {
+        left: offsetX,
+        top: offsetY,
       },
     });
     [em, blocks].map((i) => i.trigger(events.dragStart, block, ev));

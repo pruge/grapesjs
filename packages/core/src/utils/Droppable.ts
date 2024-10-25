@@ -145,11 +145,14 @@ export default class Droppable {
             const postLeft = parseInt(`${parseFloat(left) + scroll.x - canvasOffset.left}`, 10);
             const posTop = parseInt(`${parseFloat(top) + scroll.y - canvasOffset.top}`, 10);
 
+            const offset = em.get('dragOffset');
+
             comp.addStyle({
-              left: postLeft + 'px',
-              top: posTop + 'px',
+              left: postLeft - offset.left + 'px',
+              top: posTop - offset.top + 'px',
               position,
             });
+            em.set('dragOffset', undefined);
           }
           this.handleDragEnd(comp, dt);
           target.remove();

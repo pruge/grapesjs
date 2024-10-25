@@ -426,7 +426,6 @@ export default class Resizer {
    */
   getElementPos(el: HTMLElement, opts: ElementPosOpts = {}) {
     const { posFetcher } = this;
-    // console.log('posFetcher', posFetcher);
     return posFetcher ? posFetcher(el, opts) : getBoundingRect(el);
   }
 
@@ -686,11 +685,6 @@ export default class Resizer {
       h: startH,
     };
 
-    console.log('startDim', this.startDim);
-    console.log('parentDim', this.parentDim);
-
-    console.log('start', box);
-
     if (!data) return;
 
     var attr = data.handlerAttr!;
@@ -753,8 +747,6 @@ export default class Resizer {
       const i = key as keyof RectDim;
       box[i] = parseInt(`${box[i]}`, 10);
     }
-
-    console.log('end', box);
 
     return box;
   }
