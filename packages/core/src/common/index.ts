@@ -14,7 +14,7 @@ export type SetOptions = Backbone.ModelSetOptions & {
   partial?: boolean;
 };
 
-export type AddOptions = Backbone.AddOptions & { temporary?: boolean; action?: string };
+export type AddOptions = Backbone.AddOptions & { temporary?: boolean; action?: string; sourceRect?: Position };
 
 export type DisableOptions = { fromMove?: boolean };
 

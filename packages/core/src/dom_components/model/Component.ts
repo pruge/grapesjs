@@ -1782,7 +1782,7 @@ export default class Component extends StyleableModel<ComponentProperties> {
    */
   move(component: Component, opts: AddOptions = {}) {
     if (component) {
-      const { at } = opts;
+      const { at, sourceRect } = opts;
       const index = this.index();
       const sameParent = component === this.parent();
       const sameIndex = index === at || index === at! - 1;
@@ -1793,6 +1793,18 @@ export default class Component extends StyleableModel<ComponentProperties> {
         }
         const action = ActionLabelComponents.move;
         this.remove({ action, temporary: 1 });
+        if (this.em.getDragMode() === 'absolute') {
+          const targetRect = component?.getEl()?.getBoundingClientRect() ?? { top: 0, left: 0 };
+          // 항상 0이다?
+          // const sourceRect = this.getEl()?.getBoundingClientRect() ?? { top: 0, left: 0 };
+          const offsetX = targetRect.top === 0 ? 0 : 2;
+          const offsetY = targetRect.left === 0 ? 0 : 2;
+          this.setStyle({
+            ...this.getStyle(),
+            top: (sourceRect?.y ?? 0) - targetRect.top - offsetX + 'px',
+            left: (sourceRect?.x ?? 0) - targetRect.left - offsetY + 'px',
+          });
+        }
         component.append(this, { action, ...opts });
         this.emitUpdate();
       }
