@@ -1804,6 +1804,8 @@ export default class Component extends StyleableModel<ComponentProperties> {
             top: (sourceRect?.y ?? 0) - targetRect.top - offsetX + 'px',
             left: (sourceRect?.x ?? 0) - targetRect.left - offsetY + 'px',
           });
+          const lm = this.em.Layers;
+          lm.setLayerData(component, { open: true });
         }
         component.append(this, { action, ...opts });
         this.emitUpdate();

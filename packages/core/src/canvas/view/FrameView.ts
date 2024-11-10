@@ -418,11 +418,6 @@ export default class FrameView extends ModuleView<Frame, HTMLIFrameElement> {
         outline-offset: -2px;
       }
 
-      .${ppfx}selected {
-        outline: 2px solid #3b97e3 !important;
-        outline-offset: -2px;
-      }
-
       .${ppfx}selected-parent {
         outline: 2px solid ${colorWarn} !important
       }

@@ -83,6 +83,16 @@ const Properties = TypeableCollectionExt.extend({
       },
     },
     {
+      id: 'multi-select',
+      model: PropertySelect,
+      view: PropertySelectView,
+      isType(value: any) {
+        if (value && value.type == 'multi-select') {
+          return value;
+        }
+      },
+    },
+    {
       id: 'radio',
       model: PropertyRadio,
       view: PropertyRadioView,

@@ -39,6 +39,16 @@ export interface PropertyProps {
   full?: boolean;
 
   /**
+   * If true, the property will be skipped when applying styles
+   */
+  skip?: boolean;
+
+  /**
+   * If true, 보여주는 순서를 변경함.
+   */
+  order?: number;
+
+  /**
    * If true to the value will be added '!important'
    */
   important?: boolean;
@@ -123,6 +133,7 @@ export default class Property<T extends Record<string, any> = PropertyProps> ext
       visible: true,
       fixedValues: ['initial', 'inherit'],
       full: false,
+      skip: false,
       important: false,
       toRequire: false,
       requires: undefined,
@@ -132,6 +143,7 @@ export default class Property<T extends Record<string, any> = PropertyProps> ext
   }
 
   initialize(props = {}, opts: any = {}) {
+    // console.log('Property.initialize', props);
     this.em = opts.em;
     const id = this.getId() || '';
     const name: string = this.get('name') || this.get('label') || '';

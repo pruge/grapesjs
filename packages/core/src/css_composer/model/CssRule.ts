@@ -193,10 +193,13 @@ export default class CssRule extends StyleableModel<CssRuleProperties> {
   selectorsToString(opts: ObjectAny = {}) {
     const result = [];
     const state = this.get('state');
+    console.log('state', this.get('state'));
     const addSelector = this.get('selectorsAdd');
+    console.log('addSelector', addSelector);
     const selOpts = {
       escape: (str: string) => (CSS && CSS.escape ? CSS.escape(str) : str),
     };
+    console.log('selOpts', selOpts);
     // @ts-ignore
     const selectors = this.getSelectors().getFullString(0, selOpts);
     const stateStr = state && !opts.skipState ? `:${state}` : '';
