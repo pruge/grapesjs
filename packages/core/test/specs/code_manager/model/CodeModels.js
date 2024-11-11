@@ -125,7 +125,7 @@ describe('CssGenerator', () => {
     var cssc = newCssComp();
     var rule = cssc.add(cls1);
     rule.set('style', { prop1: 'value1', prop2: 'value2' });
-    rule.set('state', 'hover');
+    rule.set('state', ':hover');
 
     expect(obj.build(comp, { cssc })).toEqual('.class1:hover{prop1:value1;prop2:value2;}');
   });
@@ -256,24 +256,24 @@ describe('CssGenerator', () => {
 
   test('Render correctly a rule with avoidInlineStyle and state', () => {
     em.getConfig().avoidInlineStyle = 1;
-    const state = 'hover';
+    const state = ':hover';
     comp.config.avoidInlineStyle = 1;
     em.get('SelectorManager').setState(state);
     comp.setStyle({ color: 'red' });
     const id = comp.getId();
-    const result = `#${id}:${state}{color:red;}`;
+    const result = `#${id}${state}{color:red;}`;
     expect(obj.build(comp, { cssc: cc, em })).toEqual(result);
   });
 
   test('Render correctly a rule with avoidInlineStyle and w/o state', () => {
     em.getConfig().avoidInlineStyle = 1;
-    const state = 'hover';
+    const state = ':hover';
     comp.config.avoidInlineStyle = 1;
     comp.setStyle({ color: 'blue' });
     em.get('SelectorManager').setState(state);
     comp.setStyle({ color: 'red' });
     const id = comp.getId();
-    const result = `#${id}{color:blue;}#${id}:${state}{color:red;}`;
+    const result = `#${id}{color:blue;}#${id}${state}{color:red;}`;
     expect(obj.build(comp, { cssc: cc, em })).toEqual(result);
   });
 

@@ -58,13 +58,13 @@ describe('CssRuleView', () => {
 
     test('State correctly rendered', () => {
       objReg.model.set('style', { prop: 'value' });
-      objReg.model.set('state', 'hover');
+      objReg.model.set('state', ':hover');
       expect(objReg.$el.html()).toEqual('.test1.test2:hover{prop:value;}');
     });
 
     test('State render changes on update', () => {
       objReg.model.set('style', { prop: 'value' });
-      objReg.model.set('state', 'hover');
+      objReg.model.set('state', ':hover');
       objReg.model.set('state', '');
       expect(objReg.$el.html()).toEqual('.test1.test2{prop:value;}');
     });

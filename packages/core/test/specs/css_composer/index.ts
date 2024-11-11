@@ -168,11 +168,11 @@ describe('Css Composer', () => {
 
     test('Create a rule with id selector and state by using setIdRule()', () => {
       const name = 'test';
-      const state = 'hover';
+      const state = ':hover';
       obj.setIdRule(name, { color: 'red' }, { state });
       expect(obj.getAll().length).toEqual(1);
       const rule = obj.getIdRule(name, { state })!;
-      expect(rule.selectorsToString()).toEqual(`#${name}:${state}`);
+      expect(rule.selectorsToString()).toEqual(`#${name}${state}`);
     });
 
     test('Create a rule with class selector by using setClassRule()', () => {
@@ -186,11 +186,11 @@ describe('Css Composer', () => {
 
     test('Create a rule with class selector and state by using setClassRule()', () => {
       const name = 'test';
-      const state = 'hover';
+      const state = ':hover';
       obj.setClassRule(name, { color: 'red' }, { state });
       expect(obj.getAll().length).toEqual(1);
       const rule = obj.getClassRule(name, { state })!;
-      expect(rule.selectorsToString()).toEqual(`.${name}:${state}`);
+      expect(rule.selectorsToString()).toEqual(`.${name}${state}`);
     });
 
     test('Get the right rule, containg similar selector names', () => {
